@@ -60,9 +60,9 @@ export const config: WebdriverIO.Config = {
         maxInstances: 5,
         //
         browserName: 'chrome',
-        'goog:chromeOptions': {
-            binary: process.env.HOME + '/LocalApps/Google\ Chrome.app/Contents/MacOS/Google\ Chrome'
-        },
+        //'goog:chromeOptions': {
+        //    binary: process.env.HOME + '/LocalApps/Google\ Chrome.app/Contents/MacOS/Google\ Chrome'
+        //},
 	acceptInsecureCerts: true
         // If outputDir is provided WebdriverIO can capture driver session logs
         // it is possible to configure which logTypes to include/exclude.
