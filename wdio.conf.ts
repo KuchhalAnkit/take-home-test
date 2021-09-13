@@ -24,7 +24,7 @@ export const config: WebdriverIO.Config = {
     // will be called from there.
     //
     specs: [
-        './test/specs/**/*.ts'
+        './features/**/*.feature'
     ],
     // Patterns to exclude.
     exclude: [
@@ -57,13 +57,10 @@ export const config: WebdriverIO.Config = {
         // maxInstances can get overwritten per capability. So if you have an in-house Selenium
         // grid with only 5 firefox instances available you can make sure that not more than
         // 5 instances get started at a time.
-        maxInstances: 5,
+        maxInstances: 1,
         //
         browserName: 'chrome',
-        //'goog:chromeOptions': {
-        //    binary: process.env.HOME + '/LocalApps/Google\ Chrome.app/Contents/MacOS/Google\ Chrome'
-        //},
-	acceptInsecureCerts: true
+        acceptInsecureCerts: true
         // If outputDir is provided WebdriverIO can capture driver session logs
         // it is possible to configure which logTypes to include/exclude.
         // excludeDriverLogs: ['*'], // pass '*' to exclude all driver session logs
@@ -124,7 +121,7 @@ export const config: WebdriverIO.Config = {
     //
     // Make sure you have the wdio adapter package for the specific framework installed
     // before running any tests.
-    framework: 'mocha',
+    framework: 'cucumber',
     //
     // The number of times to retry the entire specfile when it fails as a whole
     // specFileRetries: 1,
@@ -140,15 +137,37 @@ export const config: WebdriverIO.Config = {
     // see also: https://webdriver.io/docs/dot-reporter
     reporters: ['spec'],
 
-
-    
     //
-    // Options to be passed to Mocha.
-    // See the full list at http://mochajs.org/
-    mochaOpts: {
-        ui: 'bdd',
-        timeout: 60000
+    // If you are using Cucumber you need to specify the location of your step definitions.
+    cucumberOpts: {
+        // <string[]> (file/dir) require files before executing features
+        require: ['./features/step-definitions/steps.ts'],
+        // <boolean> show full backtrace for errors
+        backtrace: false,
+        // <string[]> ("extension:module") require files with the given EXTENSION after requiring MODULE (repeatable)
+        requireModule: [],
+        // <boolean> invoke formatters without executing steps
+        dryRun: false,
+        // <boolean> abort the run on first failure
+        failFast: false,
+        // <string[]> (type[:path]) specify the output format, optionally supply PATH to redirect formatter output (repeatable)
+        format: ['pretty'],
+        // <boolean> hide step definition snippets for pending steps
+        snippets: true,
+        // <boolean> hide source uris
+        source: true,
+        // <string[]> (name) specify the profile to use
+        profile: [],
+        // <boolean> fail if there are any undefined or pending steps
+        strict: false,
+        // <string> (expression) only execute the features or scenarios with tags matching the expression
+        tagExpression: '',
+        // <number> timeout for step definitions
+        timeout: 60000,
+        // <boolean> Enable this config to treat undefined definitions as warnings.
+        ignoreUndefinedDefinitions: false
     },
+    
     //
     // =====
     // Hooks
@@ -201,41 +220,61 @@ export const config: WebdriverIO.Config = {
     // beforeCommand: function (commandName, args) {
     // },
     /**
-     * Hook that gets executed before the suite starts
-     * @param {Object} suite suite details
+     * Cucumber Hooks
+     *
+     * Runs before a Cucumber Feature.
+     * @param {String}                   uri      path to feature file
+     * @param {GherkinDocument.IFeature} feature  Cucumber feature object
      */
-    // beforeSuite: function (suite) {
+    // beforeFeature: function (uri, feature) {
     // },
     /**
-     * Function to be executed before a test (in Mocha/Jasmine) starts.
+     *
+     * Runs before a Cucumber Scenario.
+     * @param {ITestCaseHookParameter} world world object containing information on pickle and test step
      */
-    // beforeTest: function (test, context) {
+    // beforeScenario: function (world) {
     // },
     /**
-     * Hook that gets executed _before_ a hook within the suite starts (e.g. runs before calling
-     * beforeEach in Mocha)
+     *
+     * Runs before a Cucumber Step.
+     * @param {Pickle.IPickleStep} step     step data
+     * @param {IPickle}            scenario scenario pickle
      */
-    // beforeHook: function (test, context) {
+    // beforeStep: function (step, scenario) {
     // },
     /**
-     * Hook that gets executed _after_ a hook within the suite starts (e.g. runs after calling
-     * afterEach in Mocha)
+     *
+     * Runs after a Cucumber Step.
+     * @param {Pickle.IPickleStep} step     step data
+     * @param {IPickle}            scenario scenario pickle
+     * @param {Object}             result   results object containing scenario results
+     * @param {boolean}            result.passed   true if scenario has passed
+     * @param {string}             result.error    error stack if scenario failed
+     * @param {number}             result.duration duration of scenario in milliseconds
      */
-    // afterHook: function (test, context, { error, result, duration, passed, retries }) {
+    // afterStep: function (step, scenario, result) {
     // },
     /**
-     * Function to be executed after a test (in Mocha/Jasmine).
+     *
+     * Runs before a Cucumber Scenario.
+     * @param {ITestCaseHookParameter} world  world object containing information on pickle and test step
+     * @param {Object}                 result results object containing scenario results
+     * @param {boolean}                result.passed   true if scenario has passed
+     * @param {string}                 result.error    error stack if scenario failed
+     * @param {number}                 result.duration duration of scenario in milliseconds
      */
-    // afterTest: function(test, context, { error, result, duration, passed, retries }) {
+    // afterScenario: function (world, result) {
     // },
-
-
     /**
-     * Hook that gets executed after the suite has ended
-     * @param {Object} suite suite details
+     *
+     * Runs after a Cucumber Feature.
+     * @param {String}                   uri      path to feature file
+     * @param {GherkinDocument.IFeature} feature  Cucumber feature object
      */
-    // afterSuite: function (suite) {
+    // afterFeature: function (uri, feature) {
     // },
+    
     /**
      * Runs after a WebdriverIO command gets executed
      * @param {String} commandName hook command name
